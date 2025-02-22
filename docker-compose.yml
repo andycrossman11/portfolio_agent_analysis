@@ -1,0 +1,14 @@
+services:
+  postgres-api:
+    image: postgres:14.3
+    container_name: portfollio_database
+    ports:
+      - '5555:5432'
+    environment:
+      POSTGRES_USER: 'portfolio_manager'
+      POSTGRES_PASSWORD: 'portfolio_manager'
+      ALL_POSTGRES_DBS: 'portfolio,portfolio_test'
+      MIGRATION_SCRIPT: '/docker-entrypoint-initdb.d/migrations.sql'
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
+      - ./.docker-data/.pg-data:/var/lib/postgresql/data

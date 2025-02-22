@@ -10,3 +10,9 @@
 **coverage**
 
 **package-lock.json**
+
+**.vscode
+
+.docker-data
+
+.pytest_cache
