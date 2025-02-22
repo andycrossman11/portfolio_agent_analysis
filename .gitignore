@@ -1,2 +1,12 @@
 **__pycache__
 **.venv
+
+**node_modules**
+
+**dist**
+
+**build**
+
+**coverage**
+
+**package-lock.json**
