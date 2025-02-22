@@ -1,4 +1,3 @@
-// App.tsx
 import React, { useState } from 'react';
 import Sidebar from './components/Sidebar/Sidebar';
 import Calendar from './components/Caldendar/Calendar';
