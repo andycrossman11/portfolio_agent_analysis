@@ -8,15 +8,14 @@ import { store } from './redux/store';
 
 const App: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [positions, setPositions] = useState<{ id: number; name: string }[]>([]);
 
   return (
     <Provider store={store}>
-      <div className="app">
-          <Sidebar
-            positions={positions}
-        />
-        <div className="main-content" style={{ display: 'flex', gap: '16px' }}>
+      <div className="app" style={{ display: 'flex' }}>
+        <div style={{ width: '25%' }}>
+          <Sidebar />
+        </div>
+        <div className="main-content" style={{ width: '75%', display: 'flex', gap: '16px' }}>
           <Calendar />
           <PortfolioAnalysis date={selectedDate} />
         </div>

@@ -1,49 +1,56 @@
 // components/Sidebar.tsx
-import React from 'react';
-import { Drawer, List, ListItem, ListItemText, ListItemIcon, Button, Typography } from '@mui/material';
+import React, { useEffect } from 'react';
+import { Drawer, List, ListItem, Button, Typography, Divider } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '../../redux/store';
+import { fetchPositions } from '../../redux/portfolioSlice';
+import PositionCard from '../PositionCard/PositionCard';
 
-interface SidebarProps {
-  positions: { id: number; name: string }[];
-}
 
-const Sidebar: React.FC<SidebarProps> = ({ positions }) => {
+const Sidebar: React.FC = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const positions = useSelector((state: RootState) => state.portfolio.positions);
+
+  useEffect(() => {
+    dispatch(fetchPositions());
+  }
+  , []);
+
   return (
     <Drawer
       variant="permanent"
       sx={{
-        width: 240,
+        width: '25%',
         flexShrink: 0,
         '& .MuiDrawer-paper': {
-          width: 240,
+          width: '25%',
           boxSizing: 'border-box',
-          backgroundColor: '#f4f4f4',
-          padding: 2,
+          backgroundColor: '#f4f4f4'
         },
       }}
     >
-      <Typography variant="h6" sx={{ mb: 2 }}>
+      <Typography variant="h6" sx={{ mb: 2 , mt:1, ml:2}}>
         Positions
       </Typography>
-      <List>
-        {positions.map((position) => (
-          <ListItem key={position.id} sx={{ mb: 1 }}>
-            <ListItemText primary={position.name} />
-            <ListItemIcon>
-              <Button onClick={() => console.log('edit')}><EditIcon /></Button>
-              <Button onClick={() => console.log('delete')}><DeleteIcon /></Button>
-            </ListItemIcon>
+      <List sx={{ width: '100%' }}>
+      {positions.map((position, index) => (
+        <React.Fragment key={position.id}>
+          <ListItem sx={{ padding: 0, paddingTop: 0, paddingBottom: 0, width: "100%" }}>
+            <PositionCard position={position} />
           </ListItem>
-        ))}
+          {index < positions.length - 1 && (
+            <Divider sx={{ backgroundColor: '#e0e0e0' }} />
+          )}
+        </React.Fragment>
+      ))}
       </List>
       <Button
         variant="contained"
         color="primary"
         startIcon={<AddIcon />}
         onClick={() => console.log('add')}
-        sx={{ mt: 2 }}
+        sx={{ mt: 2, mr: 2, ml: 2 }}
       >
         Add Position
       </Button>

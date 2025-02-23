@@ -1,6 +1,7 @@
 import uuid
 import uvicorn
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from src.portfolio_management.database import DB_OPS, Position
 from pydantic import BaseModel
 from datetime import datetime
@@ -13,6 +14,12 @@ class StockPurchase(BaseModel):
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_methods=["GET", "PUT", "POST", "DELETE"],
+    allow_headers=["*"],
+)
 
 @app.put('/positions/{id}', response_model=dict)
 async def update_position(id: uuid.UUID, body: StockPurchase):
