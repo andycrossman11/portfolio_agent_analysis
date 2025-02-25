@@ -20,7 +20,7 @@ class TestAPI:
         "ticker": "AAPL",
         "quantity": 10.0,
         "total_purchase_price": 1500.0,
-        "purchase_date": datetime.now().isoformat()
+        "purchase_date": "02-20-2021",
     }
 
     def test_create_position(self, mock_db_ops):

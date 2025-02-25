@@ -3,14 +3,24 @@ import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from src.portfolio_management.database import DB_OPS, Position
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from datetime import datetime
 
 class StockPurchase(BaseModel):
     ticker: str
     quantity: float
     total_purchase_price: float
-    purchase_date: datetime
+    purchase_date: str
+
+    @field_validator("purchase_date", mode="before")
+    def validate_date_format(cls, value):
+        if isinstance(value, datetime):
+            return value.strftime("%m-%d-%Y")
+        try:
+            return datetime.strptime(value, "%m-%d-%Y").strftime("%m-%d-%Y")
+        except ValueError:
+            raise ValueError("Date must be in MM-DD-YYYY format")
+
 
 app = FastAPI()
 

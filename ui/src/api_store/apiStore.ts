@@ -13,6 +13,14 @@ export interface Position extends StockPurchase {
   id: string;
 }
 
+export const createEmptyPosition = (): Position => ({
+  id: "",
+  ticker: "",
+  quantity: 0,
+  total_purchase_price: 0,
+  purchase_date: new Date().toISOString().split("T")[0],
+});
+
 export class APIStore {
   private constructor() {}
 
@@ -28,6 +36,7 @@ export class APIStore {
 
   static async createPosition(data: StockPurchase): Promise<Position> {
     try {
+      console.log(JSON.stringify(data));
       const response = await axios.post<Position>(`${API_BASE_URL}/positions`, data);
       return response.data;
     } catch (error) {

@@ -10,7 +10,7 @@ def test_sqlalchemy_to_pydantic():
         ticker="AAPL",
         quantity=10,
         total_purchase_price=1500.0,
-        purchase_date=datetime.datetime.strptime("2023-01-01", "%Y-%m-%d")
+        purchase_date="01-11-2023"
     )
     
     position = sqlalchemy_to_pydantic(position_data)
@@ -27,7 +27,7 @@ def test_pydantic_to_sqlalchemy():
         ticker="AAPL",
         quantity=10,
         total_purchase_price=1500.0,
-        purchase_date="2023-01-01"
+        purchase_date="12-30-1999"
     )
     
     position_schema = pydantic_to_sqlalchemy(position)

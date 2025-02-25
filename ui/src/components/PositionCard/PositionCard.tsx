@@ -4,20 +4,22 @@ import { Position } from "../../api_store/apiStore";
 import { useSwipeable } from "react-swipeable";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { deletePosition, updatePosition } from "../../redux/portfolioSlice";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../redux/store";
+import { deletePosition, setEditingIndex, setSwipeIndex } from "../../redux/portfolioSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch , RootState} from "../../redux/store";
 
 interface StockCardProps {
   position: Position;
+  index: number;
 }
 
-const PositionCard: React.FC<StockCardProps> = ({ position }) => {
+const PositionCard: React.FC<StockCardProps> = ({ position, index }) => {
     const dispatch: AppDispatch = useDispatch();
+    const swipeIndex = useSelector((state: RootState) => state.portfolio.swipeIndex);
     const [swipedLeft, setSwipedLeft] = useState(false);
 
     const swipeHandlers = useSwipeable({
-        onSwipedLeft: () => setSwipedLeft(true), // Trigger when swiped left
+        onSwipedLeft: () => { setSwipedLeft(true); dispatch(setSwipeIndex(index)); dispatch(setEditingIndex(-1)); }, // Trigger when swiped left
         onSwipedRight: () => setSwipedLeft(false), // Reset on swipe right
         trackMouse: true,
     });
@@ -61,14 +63,14 @@ const PositionCard: React.FC<StockCardProps> = ({ position }) => {
                 zIndex: 10
                 }}
                 initial={{ x: "100%" }}
-                animate={{ x: swipedLeft ? 0 : "100%" }}
+                animate={{ x: swipedLeft && swipeIndex == index ? 0 : "100%" }}
                 transition={{ type: "spring", stiffness: 200, damping: 20 }}
             >
                 <Box sx={{ display: "flex", gap: 1 }}>
-                    <IconButton color="primary" onClick={() => {setSwipedLeft(false);}}>
+                    <IconButton color="primary" onClick={() => {dispatch(setEditingIndex(index)); setSwipedLeft(false);}}>
                         <Edit />
                     </IconButton>
-                    <IconButton color="secondary" onClick={() => dispatch(deletePosition(position.id))}>
+                    <IconButton color="secondary" onClick={() => {dispatch(deletePosition(position.id))}}>
                         <Delete />
                     </IconButton>
                     <IconButton color="default" onClick={() => setSwipedLeft(false)}>

@@ -1,17 +1,20 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { Position, StockPurchase, APIStore } from '../api_store/apiStore';
-import { Build } from '@mui/icons-material';
 
 interface PortfolioState {
   isLoading: boolean;
   error: string | null;
   positions: Position[];
+  editingIndex: number;
+  swipeIndex: number;
 }
 
 const initialState: PortfolioState = {
   isLoading: false,
   error: null,
   positions: [],
+  editingIndex: -1, 
+  swipeIndex: -1,
 };
 
 export const fetchPositions = createAsyncThunk('portfolio/fetchPositions', async () => {
@@ -34,7 +37,14 @@ export const deletePosition = createAsyncThunk("positions/deletePosition", async
 const portfolioSlice = createSlice({
   name: 'portfolio',
   initialState,
-  reducers: {},
+  reducers: {
+    setEditingIndex: (state, action: PayloadAction<number>) => {
+      state.editingIndex = action.payload;
+    },
+    setSwipeIndex: (state, action: PayloadAction<number>) => {
+      state.swipeIndex = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchPositions.pending, (state) => {
       state.isLoading = true;
@@ -63,5 +73,7 @@ const portfolioSlice = createSlice({
     });
   }
 });
+
+export const { setEditingIndex, setSwipeIndex } = portfolioSlice.actions;
 
 export default portfolioSlice.reducer;

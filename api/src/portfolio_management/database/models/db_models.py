@@ -13,4 +13,4 @@ class PositionSchema(Base):
     ticker = Column(String, nullable=False)
     quantity = Column(Float, nullable=False)
     total_purchase_price = Column(Float, nullable=False)
-    purchase_date = Column(DateTime, server_default="NOW()", nullable=False)
+    purchase_date = Column(DateTime, default=lambda: datetime.now().strftime('%m-%d-%Y'), nullable=False)
