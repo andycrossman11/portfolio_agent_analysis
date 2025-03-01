@@ -1,9 +1,9 @@
 from typing import List, Optional
 from uuid import UUID
 from datetime import datetime
-from .models.pydantic_model_map import Position
-from .models.db_models import PositionSchema
-from .models.model_conversion import pydantic_to_sqlalchemy, sqlalchemy_to_pydantic
+from .models.pydantic_model_map import Position, Analysis
+from .models.db_models import PositionSchema, AnalysisSchema
+from .models.model_conversion import PositionModelConversion, AnalysisModelConversion
 from .database_connection import DatabaseSessionFactory
 
 class DatabaseOperations:
@@ -23,21 +23,21 @@ class DatabaseOperations:
             session.commit()
             session.refresh(position)
 
-            pydantic_position = sqlalchemy_to_pydantic(position)
+            pydantic_position = PositionModelConversion.sqlalchemy_to_pydantic(position)
             return pydantic_position
 
     def get_position(self, position_id: UUID) -> Optional[Position]:
         """Retrieve a position by ID."""
         with self.db_session_factory.get_session() as session:
             postion: PositionSchema = session.query(PositionSchema).filter(PositionSchema.id == position_id).first()
-            pydantic_position = sqlalchemy_to_pydantic(postion)
+            pydantic_position = PositionModelConversion.sqlalchemy_to_pydantic(postion)
             return pydantic_position
 
     def get_all_positions(self) -> List[Position]:
         """Retrieve all positions."""
         with self.db_session_factory.get_session() as session:
             position_entries: list[PositionSchema] = session.query(PositionSchema).all()
-            positions = [sqlalchemy_to_pydantic(position) for position in position_entries]
+            positions = [PositionModelConversion.sqlalchemy_to_pydantic(position) for position in position_entries]
             return positions
 
     def update_position(self, position_id: UUID, ticker: str, quantity: float, total_purchase_price: float, purchase_date: datetime) -> Optional[Position]:
@@ -54,7 +54,7 @@ class DatabaseOperations:
 
             session.commit()
             session.refresh(position)
-            pydantic_position = sqlalchemy_to_pydantic(position)
+            pydantic_position = PositionModelConversion.sqlalchemy_to_pydantic(position)
             return pydantic_position
 
     def delete_position(self, position_id: UUID) -> bool:
@@ -67,3 +67,22 @@ class DatabaseOperations:
             session.delete(position)
             session.commit()
             return True
+        
+    def get_all_daily_analysis(self) -> List[Analysis]:
+        """Retrieve all daily analysis."""
+        with self.db_session_factory.get_session() as session:
+            analysis_entries: list[AnalysisSchema] = session.query(AnalysisSchema).all()
+            analyses = [AnalysisModelConversion.sqlalchemy_to_pydantic(analysis) for analysis in analysis_entries]
+            return analyses
+        
+    def create_daily_analysis(self, analysis: str, date: datetime) -> None:
+        with self.db_session_factory.get_session() as session:
+            analysis = AnalysisSchema(
+                analysis=analysis,
+                date=date,
+            )
+            session.add(analysis)
+            session.commit()
+            session.refresh(analysis)
+
+            return None

@@ -1,10 +1,10 @@
-from src.portfolio_management.database.models.model_conversion import sqlalchemy_to_pydantic, pydantic_to_sqlalchemy
+from api.src.portfolio_management.database.models.model_conversion import PositionModelConversion
 from src.portfolio_management.database.models.db_models import PositionSchema
 from src.portfolio_management.database.models.pydantic_model_map import Position
 import uuid
 import datetime
 
-def test_sqlalchemy_to_pydantic():
+def test_POSITION_sqlalchemy_to_pydantic():
     position_data = PositionSchema(
         id=uuid.uuid4(),
         ticker="AAPL",
@@ -13,7 +13,7 @@ def test_sqlalchemy_to_pydantic():
         purchase_date="01-11-2023"
     )
     
-    position = sqlalchemy_to_pydantic(position_data)
+    position = PositionModelConversion.sqlalchemy_to_pydantic(position_data)
     
     assert position.id == position_data.id
     assert position.ticker == position_data.ticker
@@ -21,7 +21,7 @@ def test_sqlalchemy_to_pydantic():
     assert position.total_purchase_price == position_data.total_purchase_price
     assert position.purchase_date == position_data.purchase_date
 
-def test_pydantic_to_sqlalchemy():
+def test_POSITION_pydantic_to_sqlalchemy():
     position = Position(
         id=uuid.uuid4(),
         ticker="AAPL",
@@ -30,7 +30,7 @@ def test_pydantic_to_sqlalchemy():
         purchase_date="12-30-1999"
     )
     
-    position_schema = pydantic_to_sqlalchemy(position)
+    position_schema = PositionModelConversion.pydantic_to_sqlalchemy(position)
     
     assert position_schema.id == position.id
     assert position_schema.ticker == position.ticker

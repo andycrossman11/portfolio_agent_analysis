@@ -5,7 +5,6 @@ from datetime import datetime
 from src.portfolio_management.database.database_operations import DatabaseOperations
 from src.portfolio_management.database.models.pydantic_model_map import Position
 from src.portfolio_management.database.models.db_models import PositionSchema
-from src.portfolio_management.database.models.model_conversion import sqlalchemy_to_pydantic
 
 class TestDatabaseOperations:
     @pytest.fixture(scope='module')
@@ -29,7 +28,7 @@ class TestDatabaseOperations:
         mock_position.total_purchase_price = 1500.0
         mock_position.purchase_date = datetime.now()
 
-        with patch('src.portfolio_management.database.database_operations.sqlalchemy_to_pydantic', return_value=mock_position):
+        with patch('src.portfolio_management.database.database_operations.PositionModelConversion.sqlalchemy_to_pydantic', return_value=mock_position):
             position = db_ops.create_position("AAPL", 10.0, 1500.0, datetime.now())
             assert position == mock_position
             mock_session.add.assert_called_once()
@@ -43,7 +42,7 @@ class TestDatabaseOperations:
 
         mock_session.query.return_value.filter.return_value.first.return_value = mock_position
 
-        with patch('src.portfolio_management.database.database_operations.sqlalchemy_to_pydantic', return_value=mock_position):
+        with patch('src.portfolio_management.database.database_operations.PositionModelConversion.sqlalchemy_to_pydantic', return_value=mock_position):
             position_id = uuid4()
             position = db_ops.get_position(position_id)
             assert position == mock_position
@@ -53,7 +52,7 @@ class TestDatabaseOperations:
         mock_positions = [MagicMock(spec=PositionSchema) for _ in range(3)]
         mock_session.query.return_value.all.return_value = mock_positions
 
-        with patch('src.portfolio_management.database.database_operations.sqlalchemy_to_pydantic', side_effect=mock_positions):
+        with patch('src.portfolio_management.database.database_operations.PositionModelConversion.sqlalchemy_to_pydantic', side_effect=mock_positions):
             positions = db_ops.get_all_positions()
             assert positions == mock_positions
 
@@ -62,7 +61,7 @@ class TestDatabaseOperations:
         mock_position = MagicMock(spec=PositionSchema)
         mock_session.query.return_value.filter.return_value.first.return_value = mock_position
 
-        with patch('src.portfolio_management.database.database_operations.sqlalchemy_to_pydantic', return_value=mock_position):
+        with patch('src.portfolio_management.database.database_operations.PositionModelConversion.sqlalchemy_to_pydantic', return_value=mock_position):
             position_id = uuid4()
             updated_position = db_ops.update_position(position_id, "AAPL", 20.0, 3000.0, datetime.now())
             assert updated_position == mock_position

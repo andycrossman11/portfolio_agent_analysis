@@ -20,3 +20,16 @@ class Position(BaseModel):
             return datetime.strptime(value, "%m-%d-%Y").strftime("%m-%d-%Y")
         except ValueError:
             raise ValueError("Date must be in MM-DD-YYYY format")
+        
+class Analysis(BaseModel):
+    llm_summary: str
+    analysis_date: str
+
+    @field_validator("analysis_date", mode="before")
+    def validate_date_format(cls, value):
+        if isinstance(value, datetime):
+            return value.strftime("%m-%d-%Y")
+        try:
+            return datetime.strptime(value, "%m-%d-%Y").strftime("%m-%d-%Y")
+        except ValueError:
+            raise ValueError("Date must be in MM-DD-YYYY format")

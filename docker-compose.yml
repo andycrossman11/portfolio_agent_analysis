@@ -12,3 +12,15 @@ services:
     volumes:
       - ./database:/docker-entrypoint-initdb.d
       - ./.docker-data/.pg-data:/var/lib/postgresql/data
+  rabbitmq:
+    image: rabbitmq:3.10.5-management
+    container_name: portfollio_rabbitmq
+    configs:
+      - source: plugins
+        target: /etc/rabbitmq/enabled_plugins
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    volumes:
+      - ./.docker-data/.rabbit-data:/var/lib/rabbitmq/mnesia
+      - ./.docker-data/.rabbit-log:/var/log/rabbitmq
