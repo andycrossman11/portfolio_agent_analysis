@@ -1,7 +1,7 @@
 services:
   postgres-api:
     image: postgres:14.3
-    container_name: portfollio_database
+    container_name: portfolio_database
     ports:
       - '5555:5432'
     environment:
@@ -13,11 +13,8 @@ services:
       - ./database:/docker-entrypoint-initdb.d
       - ./.docker-data/.pg-data:/var/lib/postgresql/data
   rabbitmq:
-    image: rabbitmq:3.10.5-management
-    container_name: portfollio_rabbitmq
-    configs:
-      - source: plugins
-        target: /etc/rabbitmq/enabled_plugins
+    image: rabbitmq:3-management
+    container_name: portfolio_rabbitmq
     ports:
       - '5672:5672'
       - '15672:15672'

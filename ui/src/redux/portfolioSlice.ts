@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { Position, StockPurchase, APIStore } from '../api_store/apiStore';
+import { Position, StockPurchase, Analysis, APIStore } from '../api_store/apiStore';
 
 interface PortfolioState {
   isLoading: boolean;
@@ -7,6 +7,7 @@ interface PortfolioState {
   positions: Position[];
   editingIndex: number;
   swipeIndex: number;
+  analyses: Analysis[];
 }
 
 const initialState: PortfolioState = {
@@ -15,6 +16,7 @@ const initialState: PortfolioState = {
   positions: [],
   editingIndex: -1, 
   swipeIndex: -1,
+  analyses: []
 };
 
 export const fetchPositions = createAsyncThunk('portfolio/fetchPositions', async () => {
@@ -32,6 +34,10 @@ export const updatePosition = createAsyncThunk("positions/updatePosition", async
 export const deletePosition = createAsyncThunk("positions/deletePosition", async (id: string) => {
   await APIStore.deletePosition(id);
   return id;
+});
+
+export const fetchAnalyses = createAsyncThunk('analysis/fetchAnalyses', async () => {
+  return await APIStore.getAllAnalysis();
 });
 
 const portfolioSlice = createSlice({
@@ -70,6 +76,11 @@ const portfolioSlice = createSlice({
     })
     builder.addCase(deletePosition.fulfilled, (state, action: PayloadAction<string>) => {
       state.positions = state.positions.filter((p) => p.id !== action.payload);
+    })
+    builder.addCase(fetchAnalyses.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.error = null;
+      state.analyses = action.payload
     });
   }
 });

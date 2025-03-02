@@ -19,7 +19,7 @@ class PositionModelConversion(ModelConversion):
             id=position.id,
             ticker=position.ticker,
             quantity=position.quantity,
-            total_purchase_price=position.total_purchase_price,
+            purchase_share_price=position.purchase_share_price,
             purchase_date=position.purchase_date,
         )
 
@@ -29,7 +29,7 @@ class PositionModelConversion(ModelConversion):
             id=position_data.id,
             ticker=position_data.ticker,
             quantity=position_data.quantity,
-            total_purchase_price=position_data.total_purchase_price,
+            purchase_share_price=position_data.purchase_share_price,
             purchase_date=position_data.purchase_date,
         )
 

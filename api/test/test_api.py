@@ -19,7 +19,7 @@ class TestAPI:
         "id": str(uuid.uuid4()),
         "ticker": "AAPL",
         "quantity": 10.0,
-        "total_purchase_price": 1500.0,
+        "purchase_share_price": 1500.0,
         "purchase_date": "02-20-2021",
     }
 

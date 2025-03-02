@@ -59,15 +59,15 @@ const UpdateCard: React.FC<StockCardProps> = ({ position, updatePosition }) => {
                     margin="normal"
                 />
                 <TextField
-                    label="Total Price"
+                    label="Share Price"
                     type="number"
-                    value={editedPosition.total_purchase_price}
-                    onChange={(e) => handleInputChange("total_purchase_price", parseFloat(e.target.value))}
+                    value={editedPosition.purchase_share_price}
+                    onChange={(e) => handleInputChange("purchase_share_price", parseFloat(e.target.value))}
                     fullWidth
                     margin="normal"
                 />
                 <DatePicker
-                    label="Purchased Date"
+                    label="Purchase Date"
                     value={editedPosition.purchase_date ? dayjs(editedPosition.purchase_date) : null}
                     onChange={(date: Dayjs | null) => {
                         handleInputChange("purchase_date", date ? date.format("MM-DD-YYYY") : "");

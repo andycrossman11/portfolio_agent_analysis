@@ -1,13 +1,23 @@
 from alpha_vantage.timeseries import TimeSeries
+import os
 
-API_KEY = 'your_alpha_vantage_api_key'
+class PullStockData():
+    API_KEY = os.environ.get("ALPHA_VANTAGE_KEY", None)
 
-def get_stock_price(stock_symbol: str) -> float:
-    ts = TimeSeries(key=API_KEY, output_format='json')
-    data, _ = ts.get_intraday(symbol=stock_symbol, interval='1min', outputsize='compact')
-    try:
-        latest_time = list(data.keys())[1]  # The first key is 'Meta Data'
-        return float(data[latest_time]['1. open'])
-    except KeyError:
-        return 0.0
+    @classmethod
+    def get_stock_price(cls, stock_symbol: str) -> float:
+        if cls.API_KEY == None:
+            return 10.0
+        else:
+            cls.get_price_from_alpha_vantage(stock_symbol)
+
+    @classmethod
+    def get_price_from_alpha_vantage(cls, stock_symbol):
+        ts = TimeSeries(key=cls.API_KEY, output_format='json')
+        data, _ = ts.get_intraday(symbol=stock_symbol, interval='1min', outputsize='compact')
+        try:
+            latest_time = list(data.keys())[1]  # The first key is 'Meta Data'
+            return float(data[latest_time]['1. open'])
+        except KeyError:
+            return 0.0
 

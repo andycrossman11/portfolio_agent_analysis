@@ -10,13 +10,13 @@ class DatabaseOperations:
     def __init__(self, db_session_factory: DatabaseSessionFactory):
         self.db_session_factory: DatabaseSessionFactory = db_session_factory
 
-    def create_position(self, ticker: str, quantity: float, total_purchase_price: float, purchase_date: datetime) -> Position:
+    def create_position(self, ticker: str, quantity: float, purchase_share_price: float, purchase_date: datetime) -> Position:
         """Create a new position and add it to the database."""
         with self.db_session_factory.get_session() as session:
             position = PositionSchema(
                 ticker=ticker,
                 quantity=quantity,
-                total_purchase_price=total_purchase_price,
+                purchase_share_price=purchase_share_price,
                 purchase_date=purchase_date,
             )
             session.add(position)
@@ -40,7 +40,7 @@ class DatabaseOperations:
             positions = [PositionModelConversion.sqlalchemy_to_pydantic(position) for position in position_entries]
             return positions
 
-    def update_position(self, position_id: UUID, ticker: str, quantity: float, total_purchase_price: float, purchase_date: datetime) -> Optional[Position]:
+    def update_position(self, position_id: UUID, ticker: str, quantity: float, purchase_share_price: float, purchase_date: datetime) -> Optional[Position]:
         """Update an existing position."""
         with self.db_session_factory.get_session() as session:
             position = session.query(PositionSchema).filter(PositionSchema.id == position_id).first()
@@ -49,7 +49,7 @@ class DatabaseOperations:
 
             position.ticker = ticker
             position.quantity = quantity
-            position.total_purchase_price = total_purchase_price
+            position.purchase_share_price = purchase_share_price
             position.purchase_date = purchase_date
 
             session.commit()
@@ -78,8 +78,8 @@ class DatabaseOperations:
     def create_daily_analysis(self, analysis: str, date: datetime) -> None:
         with self.db_session_factory.get_session() as session:
             analysis = AnalysisSchema(
-                analysis=analysis,
-                date=date,
+                llm_summary=analysis,
+                analysis_date=date,
             )
             session.add(analysis)
             session.commit()

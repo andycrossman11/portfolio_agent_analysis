@@ -9,7 +9,7 @@ def test_POSITION_sqlalchemy_to_pydantic():
         id=uuid.uuid4(),
         ticker="AAPL",
         quantity=10,
-        total_purchase_price=1500.0,
+        purchase_share_price=1500.0,
         purchase_date="01-11-2023"
     )
     
@@ -18,7 +18,7 @@ def test_POSITION_sqlalchemy_to_pydantic():
     assert position.id == position_data.id
     assert position.ticker == position_data.ticker
     assert position.quantity == position_data.quantity
-    assert position.total_purchase_price == position_data.total_purchase_price
+    assert position.purchase_share_price == position_data.purchase_share_price
     assert position.purchase_date == position_data.purchase_date
 
 def test_POSITION_pydantic_to_sqlalchemy():
@@ -26,7 +26,7 @@ def test_POSITION_pydantic_to_sqlalchemy():
         id=uuid.uuid4(),
         ticker="AAPL",
         quantity=10,
-        total_purchase_price=1500.0,
+        purchase_share_price=1500.0,
         purchase_date="12-30-1999"
     )
     
@@ -35,5 +35,5 @@ def test_POSITION_pydantic_to_sqlalchemy():
     assert position_schema.id == position.id
     assert position_schema.ticker == position.ticker
     assert position_schema.quantity == position.quantity
-    assert position_schema.total_purchase_price == position.total_purchase_price
+    assert position_schema.purchase_share_price == position.purchase_share_price
     assert position_schema.purchase_date == position.purchase_date

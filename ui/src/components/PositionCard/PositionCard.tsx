@@ -40,7 +40,7 @@ const PositionCard: React.FC<StockCardProps> = ({ position, index }) => {
                 <Typography variant="h6">{position.ticker}</Typography>
                 <Typography variant="body2">Quantity: {position.quantity}</Typography>
                 <Typography variant="body2">
-                Total Price: ${position.total_purchase_price.toFixed(2)}
+                Total Price: ${position.purchase_share_price.toFixed(2)}
                 </Typography>
                 <Typography variant="body2">
                 Purchased: {new Date(position.purchase_date).toISOString().split("T")[0]}

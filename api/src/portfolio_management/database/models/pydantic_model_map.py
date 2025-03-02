@@ -6,7 +6,7 @@ class Position(BaseModel):
     id: UUID
     ticker: str = Field(..., max_length=10)
     quantity: float
-    total_purchase_price: float
+    purchase_share_price: float
     purchase_date: str
 
     class Config:

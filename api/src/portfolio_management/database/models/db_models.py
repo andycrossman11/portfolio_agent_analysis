@@ -11,7 +11,7 @@ class PositionSchema(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, server_default="gen_random_uuid()")
     ticker = Column(String, nullable=False)
     quantity = Column(Float, nullable=False)
-    total_purchase_price = Column(Float, nullable=False)
+    purchase_share_price = Column(Float, nullable=False)
     purchase_date = Column(DateTime, default=lambda: datetime.now().strftime('%m-%d-%Y'), nullable=False)
 
 

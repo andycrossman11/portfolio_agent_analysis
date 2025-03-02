@@ -3,17 +3,17 @@ import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from src.portfolio_management.database import DB_OPS, Position, Analysis
-from pydantic import BaseModel, field_validator
 from datetime import datetime
-from apscheduler.schedulers.background import BackgroundScheduler
-import aio_pika
-import pytz
 import os
+from pydantic import BaseModel, field_validator
+from apscheduler.schedulers.background import BackgroundScheduler
+import time
+from publish import publish_message
 
 class StockPurchase(BaseModel):
     ticker: str
     quantity: float
-    total_purchase_price: float
+    purchase_share_price: float
     purchase_date: str
 
     @field_validator("purchase_date", mode="before")
@@ -28,7 +28,6 @@ class StockPurchase(BaseModel):
 
 app = FastAPI()
 scheduler = BackgroundScheduler()
-RABBITMQ_URL = os.environ.get("RABBITMQ_URL", "amqp://guest:guest@localhost/")
 
 app.add_middleware(
     CORSMiddleware,
@@ -37,28 +36,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-async def publish_message():
-    connection = await aio_pika.connect_robust(RABBITMQ_URL)
-    async with connection:
-        channel = await connection.channel()
-        queue = await channel.declare_queue("event_queue", durable=True)
-        message = f"Task triggered at {datetime.now()}"
-        await channel.default_exchange.publish(
-            aio_pika.Message(body=message.encode()),
-            routing_key=queue.name
-        )
-        print(f"Published: {message}")
-
 @app.on_event("startup")
 def start_scheduler():
-    est = pytz.timezone("America/New_York")
-    scheduler.add_job(publish_message, "cron", hour=17, minute=30, day_of_week="mon-fri", timezone=est)
+    scheduler.add_job(publish_message, "interval", minutes=15)
     scheduler.start()
-    print("Scheduler started")
+    print("Portfolio Analysis Scheduler started")
 
 @app.on_event("shutdown")
 def shutdown_scheduler():
     scheduler.shutdown()
+    print("Portfolio Analysis Scheduler stopped")
 
 @app.put('/positions/{id}', response_model=dict)
 async def update_position(id: uuid.UUID, body: StockPurchase):
@@ -68,7 +55,7 @@ async def update_position(id: uuid.UUID, body: StockPurchase):
     return {"message": "Position updated successfully"}
 
 @app.delete('/positions/{id}', response_model=dict)
-async def udelete_position(id: uuid.UUID):
+async def delete_position(id: uuid.UUID):
     success = DB_OPS.delete_position(id)
     if not success:
         raise HTTPException(status_code=404, detail="Position not found")
