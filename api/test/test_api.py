@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from fastapi.testclient import TestClient
 from unittest.mock import patch, MagicMock
-from src.api import app, StockPurchase
+from api.src.api.api import app, StockPurchase
 import pytest
 
 client = TestClient(app)

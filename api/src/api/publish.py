@@ -3,8 +3,10 @@ import os
 
 ROUTING_KEY = os.environ.get("RABBITMQ_ROUTE", "portfolio_analysis")
 
+HOST = os.environ.get("RABBITMQ_HOST", "rabbitmq")
+
 def publish_message():
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=HOST))
     channel = connection.channel()
 
     exchange_name = os.environ.get("RABBITMQ_EXCHANGE", 'portfolio_management')

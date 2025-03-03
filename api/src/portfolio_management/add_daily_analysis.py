@@ -1,5 +1,5 @@
 from llm.llm_inference import LLM
-from database import DB_OPS, Position
+from shared.database import DB_OPS, Position
 from stock_market import PullStockData, StockData, convert_portfolio_data_to_string
 from uuid import uuid4
 from datetime import datetime

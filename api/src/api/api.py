@@ -2,7 +2,9 @@ import uuid
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from src.portfolio_management.database import DB_OPS, Position, Analysis
+import sys
+print(sys.path)
+from shared.database import DB_OPS, Position, Analysis
 from datetime import datetime
 import os
 from pydantic import BaseModel, field_validator

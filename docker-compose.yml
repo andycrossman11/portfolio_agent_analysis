@@ -12,6 +12,13 @@ services:
     volumes:
       - ./database:/docker-entrypoint-initdb.d
       - ./.docker-data/.pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U portfolio_manager -d portfolio"]
+      interval: 10s     
+      timeout: 5s       
+      retries: 5        
+      start_period: 10s 
+      
   rabbitmq:
     image: rabbitmq:3-management
     container_name: portfolio_rabbitmq
@@ -21,3 +28,46 @@ services:
     volumes:
       - ./.docker-data/.rabbit-data:/var/lib/rabbitmq/mnesia
       - ./.docker-data/.rabbit-log:/var/log/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+
+  portfolio-analyser:
+    build:
+      context: ./api/src
+      dockerfile: ./portfolio_management/Dockerfile
+    container_name: portfolio_analyser
+    depends_on:
+      postgres-api:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+
+  portfolio-api:
+    build:
+      context: ./api/src
+      dockerfile: ./api/Dockerfile
+    container_name: portfolio_api
+    ports:
+      - '8000:8000'
+    depends_on:
+      postgres-api:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      portfolio-analyser:
+        condition: service_started
+
+  ui:
+    build:
+      context: ./ui
+      dockerfile: ./Dockerfile
+    container_name: portfolio_ui
+    ports:
+      - '3000:80'
+    depends_on:
+      portfolio-api:
+        condition: service_started

@@ -1,0 +1,2 @@
+ollama==0.4.7
+alpha-vantage==3.0.0

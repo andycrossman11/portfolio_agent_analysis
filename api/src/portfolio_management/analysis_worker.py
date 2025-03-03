@@ -2,11 +2,10 @@ import pika
 import os
 from add_daily_analysis import add_daily_analysis
 
-def callback(ch, method, properties, body):
-    print(f"Received: {body.decode()} with routing key: {method.routing_key}")
+HOST = os.environ.get("RABBITMQ_HOST", "rabbitmq")
 
 def consume_messages(routing_key):
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=HOST))
     channel = connection.channel()
 
     exchange_name = os.environ.get("RABBITMQ_EXCHANGE", 'portfolio_management')
