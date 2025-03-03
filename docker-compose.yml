@@ -18,7 +18,7 @@ services:
       timeout: 5s       
       retries: 5        
       start_period: 10s 
-      
+
   rabbitmq:
     image: rabbitmq:3-management
     container_name: portfolio_rabbitmq
@@ -44,6 +44,9 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+    env_file:
+      - ./portfolio_management/.env
+
 
 
   portfolio-api:

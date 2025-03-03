@@ -4,7 +4,7 @@ import ollama
 
 
 class LLM():
-    host = os.getenv("OLLAMA_HOST", "localhost")
+    host = os.getenv("OLLAMA_HOST", "host.docker.internal")
 
     ollama.api_base = f"http://{host}:11434"
 

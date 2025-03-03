@@ -40,7 +40,7 @@ app.add_middleware(
 
 @app.on_event("startup")
 def start_scheduler():
-    scheduler.add_job(publish_message, "interval", minutes=15)
+    scheduler.add_job(publish_message, "interval", minutes=3)
     scheduler.start()
     print("Portfolio Analysis Scheduler started")
 
