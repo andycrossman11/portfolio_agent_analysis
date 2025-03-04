@@ -11,6 +11,6 @@ A full stack web app to automatically generate daily portfolio performance analy
 ## How to Run
 - Ensure you have docker and docker-compose installed
 - Simply run docker-compose up --build
-- UI will be running on http://localhost:3000
-- API docs availabel at htpp://localhost:8000/docs
+- UI will be running on **http://localhost:3000**
+- API docs availabel at **http://localhost:8000/docs**
 - Can also utilize Docker Desktop to view the 5 container logs
