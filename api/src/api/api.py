@@ -10,6 +10,10 @@ from pydantic import BaseModel, field_validator
 from apscheduler.schedulers.background import BackgroundScheduler
 import time
 from publish import publish_message
+from metrics import track_request, get_request_metrics
+from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
+from starlette.requests import Request
+from starlette.responses import JSONResponse
 
 class StockPurchase(BaseModel):
     ticker: str
@@ -37,6 +41,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.middleware("http")
+async def prometheus_middleware(request: Request, call_next):
+    # Call the next middleware or endpoint
+    response = await call_next(request)
+    
+    # Track the request AFTER the endpoint executes
+    track_request(request.method, request.url.path)
+    
+    return response
+
 @app.on_event("startup")
 def start_scheduler():
     scheduler.add_job(publish_message, "interval", hours=24)
@@ -47,6 +61,15 @@ def start_scheduler():
 def shutdown_scheduler():
     scheduler.shutdown()
     print("Portfolio Analysis Scheduler stopped")
+
+@app.get("/health")
+def get_health():
+    return {"status": "app running"}
+
+@app.get("/performance/endpoint_metrics")
+async def get_metrics():
+    metrics = get_request_metrics()
+    return JSONResponse(content=metrics)
 
 @app.put('/positions/{id}', response_model=dict)
 async def update_position(id: uuid.UUID, body: StockPurchase):
