@@ -30,8 +30,8 @@ jobs:
 
       - name: Build and Push App Image
         run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/portfolio_API:${{ inputs.image_tags }} -f api/src/api/Dockerfile .
-          docker push ghcr.io/${{ github.repository_owner }}/portfolio_API:${{ inputs.image_tags }}
+          docker build -t ghcr.io/${{ github.repository_owner }}/portfolio_api:${{ inputs.image_tags }} -f api/src/api/Dockerfile .
+          docker push ghcr.io/${{ github.repository_owner }}/portfolio_api:${{ inputs.image_tags }}
 
       - name: Build and Push Sidecar 1 Image
         run: |
