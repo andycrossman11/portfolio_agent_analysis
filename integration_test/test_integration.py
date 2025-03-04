@@ -2,7 +2,7 @@ import pytest
 import requests
 import time
 
-API_URL = "http://localhost:8000/"
+API_URL = "http://localhost:8000"
 UI_URL = "http://localhost:3000"
 
 @pytest.fixture(scope="session", autouse=True)

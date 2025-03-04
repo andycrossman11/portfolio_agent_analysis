@@ -26,11 +26,11 @@ jobs:
         python-version: '3.10'
 
     - name: Install Dependencies
-      working-directory: .
+      working-directory: integration_test
       run: |
         python -m venv .venv
         source .venv/bin/activate
-        pip install -r integration_test/requirements.txt
+        pip install -r requirements.txt
 
     - name: Run Integration Test
       working-directory: integration_test
