@@ -45,7 +45,7 @@ services:
       rabbitmq:
         condition: service_healthy
     env_file:
-      - ./portfolio_management/.env
+      - ./api/src/portfolio_management/.env
 
 
 

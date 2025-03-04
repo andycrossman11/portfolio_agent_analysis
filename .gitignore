@@ -16,3 +16,5 @@
 .docker-data
 
 .pytest_cache
+
+**.env

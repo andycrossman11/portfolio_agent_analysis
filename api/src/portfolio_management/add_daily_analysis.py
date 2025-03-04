@@ -10,12 +10,11 @@ def add_daily_analysis(ch, method, properties, body) -> None:
     analysis: str = LLM.get_portfolio_analysis(stock_data_as_text)
     print(f"analysis: {analysis}")
     DB_OPS.create_daily_analysis(analysis, datetime.now())
-    print("analysis added to")
+    print("analysis added")
 
 def convert_positions_to_stock_data_text(positions: list[Position]) -> str:
     stock_data_list: list[StockData] = []
     for position in positions:
-        print(position)
         today_price = PullStockData.get_stock_price(position.ticker)
         stock_data = StockData(ticker=position.ticker, buy_price=position.purchase_share_price, today_price=today_price, quantity=position.quantity)
         stock_data_list.append(stock_data)

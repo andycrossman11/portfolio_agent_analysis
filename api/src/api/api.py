@@ -3,7 +3,6 @@ import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import sys
-print(sys.path)
 from shared.database import DB_OPS, Position, Analysis
 from datetime import datetime
 import os
@@ -40,7 +39,7 @@ app.add_middleware(
 
 @app.on_event("startup")
 def start_scheduler():
-    scheduler.add_job(publish_message, "interval", minutes=3)
+    scheduler.add_job(publish_message, "interval", hours=24)
     scheduler.start()
     print("Portfolio Analysis Scheduler started")
 

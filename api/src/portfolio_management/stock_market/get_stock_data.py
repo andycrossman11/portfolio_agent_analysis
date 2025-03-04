@@ -9,15 +9,16 @@ class PullStockData():
         if cls.API_KEY == None:
             return 10.0
         else:
-            cls.get_price_from_alpha_vantage(stock_symbol)
+            return cls.get_price_from_alpha_vantage(stock_symbol)
 
     @classmethod
-    def get_price_from_alpha_vantage(cls, stock_symbol):
+    def get_price_from_alpha_vantage(cls, stock_symbol) -> float:
         ts = TimeSeries(key=cls.API_KEY, output_format='json')
         data, _ = ts.get_intraday(symbol=stock_symbol, interval='1min', outputsize='compact')
         try:
             latest_time = list(data.keys())[1]  # The first key is 'Meta Data'
-            return float(data[latest_time]['1. open'])
+            latest_price = float(data[latest_time]['1. open'])
+            return latest_price
         except KeyError:
             return 0.0
 
