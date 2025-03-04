@@ -25,7 +25,7 @@ jobs:
       run: |
         python -m venv .venv
         source .venv/bin/activate
-        for req in requirements.txt api/requirements.txt portfolio_management/requirements.txt test/requirements.txt; do
+        for req in requirements.txt api/requirements.txt portfolio_management/requirements.txt shared/requirements.txt test/requirements.txt; do
           if [ -f $req ]; then
             echo "Installing $req"
             pip install -r $req
