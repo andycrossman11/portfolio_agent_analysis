@@ -1,0 +1,46 @@
+name: Integration Tests
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - '**'
+
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: unit-tests  # This enforces the ordering
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Compose
+      run: docker-compose up -d --build
+      working-directory: .
+
+    - name: Wait for Services to Be Healthy
+      run: |
+        echo "Waiting for services to become healthy..."
+        sleep 60
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install Dependencies
+      working-directory: .
+      run: |
+        python -m venv .venv
+        source .venv/bin/activate
+        pip install -r integration_test/requirements.txt
+
+    - name: Run Integration Test
+      working-directory: integration_test
+      run: |
+        source .venv/bin/activate
+        pytest test_integration.py
+
+    
