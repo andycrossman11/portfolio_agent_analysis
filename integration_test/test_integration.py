@@ -1,7 +1,7 @@
 import requests
 
-API_URL = "http://portfolio-api:8000"
-UI_URL = "http://ui:3000"
+API_URL = "http://localhost:8000"
+UI_URL = "http://localhost:3000"
 
 def test_ui_available():
     response = requests.get(UI_URL)

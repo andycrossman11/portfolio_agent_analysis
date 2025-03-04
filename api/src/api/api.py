@@ -9,8 +9,8 @@ import os
 from pydantic import BaseModel, field_validator
 from apscheduler.schedulers.background import BackgroundScheduler
 import time
-from .publish import publish_message
-from .metrics import track_request, get_request_metrics
+from publish import publish_message
+from metrics import track_request, get_request_metrics
 from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 from starlette.requests import Request
 from starlette.responses import JSONResponse
