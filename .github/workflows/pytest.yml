@@ -1,0 +1,41 @@
+name: Run Pytest
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - '**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install Dependencies
+      working-directory: api
+      run: |
+        python -m venv .venv
+        source .venv/bin/activate
+        for req in requirements.txt api/requirements.txt portfolio_management/requirements.txt test/requirements.txt; do
+          if [ -f $req ]; then
+            echo "Installing $req"
+            pip install -r $req
+          fi
+        done
+
+    - name: Run Pytest with Coverage
+      working-directory: api
+      env:
+        PYTHONPATH: ./src:./api:./portfolio_management
+      run: |
+        source .venv/bin/activate
+        pytest test/ --cov=src --cov-report=xml
