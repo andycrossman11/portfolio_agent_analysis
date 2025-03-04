@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from fastapi.testclient import TestClient
 from unittest.mock import patch, MagicMock
-from api.src.api.api import app, StockPurchase
+from api.api import app, StockPurchase
 import pytest
 
 client = TestClient(app)
@@ -10,7 +10,7 @@ client = TestClient(app)
 # Mock the entire portfolio_management.database package
 @pytest.fixture(scope='module')
 def mock_db_ops():
-    with patch('src.api.DB_OPS', new_callable=MagicMock) as mock_db_ops:
+    with patch('api.api.DB_OPS', new_callable=MagicMock) as mock_db_ops:
         yield mock_db_ops
 
 class TestAPI:

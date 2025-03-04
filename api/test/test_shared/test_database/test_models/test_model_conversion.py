@@ -1,6 +1,6 @@
-from api.src.portfolio_management.database.models.model_conversion import PositionModelConversion
-from src.portfolio_management.database.models.db_models import PositionSchema
-from src.portfolio_management.database.models.pydantic_model_map import Position
+from shared.database.models.model_conversion import PositionModelConversion
+from shared.database.models.db_models import PositionSchema
+from shared.database.models.pydantic_model_map import Position
 import uuid
 import datetime
 
