@@ -14,3 +14,11 @@ jobs:
   integration-tests:
     needs: unit-tests
     uses: ./.github/workflows/integration-tests.yml
+
+  publish:
+    needs: integration-tests
+    uses: ./.github/workflows/publish.yml
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      image_tags: latest

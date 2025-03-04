@@ -1,0 +1,44 @@
+name: Publish Docker Images
+
+on:
+  workflow_call:
+    inputs:
+      image_tags:
+        required: false
+        type: string
+        default: latest
+    secrets:
+      GH_TOKEN:
+        required: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_TOKEN }}
+
+      - name: Build and Push App Image
+        run: |
+          docker build -t ghcr.io/${{ github.repository_owner }}/portfolio_API:${{ inputs.image_tags }} -f api/src/api/Dockerfile .
+          docker push ghcr.io/${{ github.repository_owner }}/portfolio_API:${{ inputs.image_tags }}
+
+      - name: Build and Push Sidecar 1 Image
+        run: |
+          docker build -t ghcr.io/${{ github.repository_owner }}/portfolio_management:${{ inputs.image_tags }} -f api/src/portfolio_management/Dockerfile .
+          docker push ghcr.io/${{ github.repository_owner }}/portfolio_management:${{ inputs.image_tags }}
+
+      - name: Build and Push Sidecar 2 Image
+        run: |
+          docker build -t ghcr.io/${{ github.repository_owner }}/portfolio_ui:${{ inputs.image_tags }} -f ui/Dockerfile .
+          docker push ghcr.io/${{ github.repository_owner }}/portfolio_ui:${{ inputs.image_tags }}
